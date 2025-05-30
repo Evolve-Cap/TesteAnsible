@@ -1,0 +1,29 @@
+name: Deploy Node.js via Ansible com rolling e balancer
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch para deploy'
+        required: false
+        default: 'main'
+      target:
+        description: 'Grupo do inventory (ex: app)'
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar Ansible na Jumpbox (VPS)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: ACCESS_TOKEN
+          script: |
+            export git_token="${{ secrets.ACCESS_TOKEN }}"
+            ansible-playbook -i /opt/deploy/hosts /opt/deploy/deploy-node.yml \
+              -e "branch=${{ github.event.inputs.branch }} git_token=${{ secrets.ACCESS_TOKEN }} repo_url=https://${{ secrets.ACCESS_TOKEN }}@github.com/Evolve-Cap/TesteAnsible.git" \
+              --limit "${{ github.event.inputs.target }}"
