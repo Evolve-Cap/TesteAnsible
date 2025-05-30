@@ -25,6 +25,4 @@ jobs:
           script: |
             `  export PATH=$PATH:/root/.local/bin`
             `  export git_token="${{ secrets.GIT_TOKEN }}"`
-            `  ansible-playbook -i /root/ansible/inventory /root/ansible/deploy_cartela_pix.yml`
-            `    -e "branch=master git_token=${{ secrets.GIT_TOKEN }} repo_url=https://${{ secrets.GIT_TOKEN }}@github.com/Evolve-Cap/TesteAnsible.git"`
-            `    --limit "cartelaPixHomol"`
+            `  ansible-playbook -i /root/ansible/inventory /root/ansible/deploy_cartela_pix.yml -e "branch=master git_token=${{ secrets.GIT_TOKEN }} repo_url=https://${{ secrets.GIT_TOKEN }}@github.com/Evolve-Cap/TesteAnsible.git" --limit "cartelaPixHomol"`
