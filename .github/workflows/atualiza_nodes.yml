@@ -1,16 +1,15 @@
+---
 name: Deploy Node.js via Ansible com rolling e balancer
-
 on:
   workflow_dispatch:
     inputs:
       branch:
-        description: 'Branch para deploy'
+        description: Branch para deploy
         required: false
-        default: 'main'
+        default: main
       target:
-        description: 'Grupo do inventory (ex: app)'
+        description: "Grupo do inventory (ex: app)"
         required: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,8 +20,8 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          envs: ACCESS_TOKEN
+          envs: GIT_TOKEN
           script: |
-            `  export PATH=$PATH:/root/.local/bin`
-            `  export git_token="${{ secrets.GIT_TOKEN }}"`
-            `  ansible-playbook -i /root/ansible/inventory /root/ansible/deploy_cartela_pix.yml -e "branch=master git_token=${{ secrets.GIT_TOKEN }} repo_url=https://${{ secrets.GIT_TOKEN }}@github.com/Evolve-Cap/TesteAnsible.git" --limit "cartelaPixHomol"`
+            export PATH=$PATH:/root/.local/bin
+            export git_token="${{ secrets.GIT_TOKEN }}"
+            ansible-playbook -i /root/ansible/inventory /root/ansible/deploy_cartela_pix.yml -e "branch=${{ github.event.inputs.branch }} git_token=${{ secrets.GIT_TOKEN }} repo_url=https://${{ secrets.GIT_TOKEN }}@github.com/evolve-cap/testeansible.git" --limit "${{ github.event.inputs.target }}"
