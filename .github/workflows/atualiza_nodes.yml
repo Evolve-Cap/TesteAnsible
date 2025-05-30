@@ -24,6 +24,6 @@ jobs:
           envs: ACCESS_TOKEN
           script: |
             export git_token="${{ secrets.ACCESS_TOKEN }}"
-            ansible-playbook -i /opt/deploy/hosts /opt/deploy/deploy-node.yml \
+            ansible-playbook -i /root/ansible/inventory /root/ansible/deploy_cartela_pix.yml \
               -e "branch=${{ github.event.inputs.branch }} git_token=${{ secrets.ACCESS_TOKEN }} repo_url=https://${{ secrets.ACCESS_TOKEN }}@github.com/Evolve-Cap/TesteAnsible.git" \
               --limit "${{ github.event.inputs.target }}"
